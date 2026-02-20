@@ -1,4 +1,15 @@
-let inventory = JSON.parse(localStorage.getItem("inventory")) || [];
+let inventory = JSON.parse(localStorage.getItem("inventory"));
+
+if (!inventory) {
+  inventory = [
+    { name: "Brake Chambers", quantity: 10 },
+    { name: "Air Fittings", quantity: 10 },
+    { name: "Brake Pads", quantity: 10 },
+    { name: "Brake Drums", quantity: 10 },
+    { name: "Oil Filters", quantity: 10 }
+  ];
+  saveInventory();
+}
 
 function saveInventory() {
   localStorage.setItem("inventory", JSON.stringify(inventory));
@@ -9,42 +20,30 @@ function renderInventory() {
   table.innerHTML = "";
 
   inventory.forEach((item, index) => {
-    const row = `
+    const statusClass = item.quantity <= 3 ? "low" : "ok";
+    const statusText = item.quantity <= 3 ? "LOW STOCK" : "IN STOCK";
+
+    table.innerHTML += `
       <tr>
         <td>${item.name}</td>
         <td>${item.quantity}</td>
-        <td>${item.supplier}</td>
-        <td class="${item.quantity <= 5 ? 'low' : ''}">
-          ${item.quantity <= 5 ? 'LOW STOCK' : 'OK'}
+        <td>
+          <button class="minus" onclick="adjustQuantity(${index}, -1)">-</button>
+          <button class="plus" onclick="adjustQuantity(${index}, 1)">+</button>
         </td>
-        <td><button onclick="deletePart(${index})">X</button></td>
+        <td class="${statusClass}">${statusText}</td>
       </tr>
     `;
-    table.innerHTML += row;
   });
 }
 
-function addPart() {
-  const name = document.getElementById("partName").value;
-  const quantity = parseInt(document.getElementById("quantity").value);
-  const supplier = document.getElementById("supplier").value;
+function adjustQuantity(index, amount) {
+  inventory[index].quantity += amount;
 
-  if (!name || !quantity || !supplier) {
-    alert("Fill out all fields");
-    return;
+  if (inventory[index].quantity < 0) {
+    inventory[index].quantity = 0;
   }
 
-  inventory.push({ name, quantity, supplier });
-  saveInventory();
-  renderInventory();
-
-  document.getElementById("partName").value = "";
-  document.getElementById("quantity").value = "";
-  document.getElementById("supplier").value = "";
-}
-
-function deletePart(index) {
-  inventory.splice(index, 1);
   saveInventory();
   renderInventory();
 }
