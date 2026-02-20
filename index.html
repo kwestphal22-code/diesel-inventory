@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Diesel Shop Inventory</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Diesel Shop Inventory</h1>
+
+  <div class="form">
+    <input type="text" id="partName" placeholder="Part Name">
+    <input type="number" id="quantity" placeholder="Quantity">
+    <input type="text" id="supplier" placeholder="Supplier">
+    <button onclick="addPart()">Add Part</button>
+  </div>
+
+  <h2>Inventory</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Part</th>
+        <th>Qty</th>
+        <th>Supplier</th>
+        <th>Status</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody id="inventoryTable"></tbody>
+  </table>
+
+<script src="script.js"></script>
+</body>
+</html>
